@@ -7,7 +7,12 @@ export default configureWunderGraphServer<HooksConfig, InternalClient>(() => ({
     queries: {
       Dragons: {
         postResolve: async (hook) => {
-          hook.log.info("postResolve hook for Dragons");
+          if (hook.response.errors) return hook.response;
+          hook.response.data?.spacex_dragons?.push({
+            name: process.env.FOO,
+            active: true,
+          });
+          return hook.response;
         },
       },
     },
